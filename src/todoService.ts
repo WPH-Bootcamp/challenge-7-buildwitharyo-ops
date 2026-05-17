@@ -1,24 +1,47 @@
-// TODO: Import tipe-tipe yang sudah didefinisikan di types.ts
+import { TodoNotFoundError, ValidationError } from './errors';
+import type { Todo } from './types';
+import { createId, isNonEmptyString } from './utils';
 
-// TODO: Import fungsi storage untuk baca/tulis file
+export function addTodo(todos: Todo[], text: string): Todo[] {
+  const trimmed = text.trim();
+  if (!isNonEmptyString(trimmed)) {
+    throw new ValidationError('Todo text cannot be empty');
+  }
 
-// TODO: Buat fungsi untuk menambahkan To-Do baru
-// - Generate id yang unik (bisa pakai timestamp atau counter)
-// - Pastikan text tidak kosong
-// - Set default status sebagai active
+  const newTodo: Todo = {
+    id: createId(),
+    text: trimmed,
+    completed: false,
+    createdAt: new Date().toISOString(),
+  };
 
-// TODO: Buat fungsi untuk menandai To-Do sebagai selesai
-// - Cari To-Do berdasarkan id
-// - Ubah statusnya menjadi completed
-// - Handle kasus jika id tidak ditemukan
+  return [...todos, newTodo];
+}
 
-// TODO: Buat fungsi untuk menghapus To-Do
-// - Filter To-Do berdasarkan id
-// - Handle kasus jika id tidak ditemukan
+export function toggleTodo(todos: Todo[], id: string): Todo[] {
+  const index = todos.findIndex((todo) => todo.id === id);
+  if (index === -1) {
+    throw new TodoNotFoundError(id);
+  }
 
-// TODO: Buat fungsi untuk menampilkan semua To-Do
-// - Tampilkan dengan format yang rapi
-// - Tambahkan status [ACTIVE] atau [DONE] di depan setiap To-Do
-// - Berikan nomor urut untuk memudahkan user memilih
+  const target = todos[index];
+  if (!target) throw new TodoNotFoundError(id);
 
-// TODO: Buat fungsi untuk mencari To-Do berdasarkan keyword
+  const updated: Todo = { ...target, completed: !target.completed };
+  return [...todos.slice(0, index), updated, ...todos.slice(index + 1)];
+}
+
+export function deleteTodo(todos: Todo[], id: string): Todo[] {
+  const exists = todos.some((todo) => todo.id === id);
+  if (!exists) {
+    throw new TodoNotFoundError(id);
+  }
+
+  return todos.filter((todo) => todo.id !== id);
+}
+
+export function searchTodos(todos: Todo[], keyword: string): Todo[] {
+  const needle = keyword.trim().toLowerCase();
+  if (needle.length === 0) return todos;
+  return todos.filter((todo) => todo.text.toLowerCase().includes(needle));
+}

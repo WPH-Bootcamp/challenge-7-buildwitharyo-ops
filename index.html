@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App · TypeScript</title>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen">
+    <main class="max-w-2xl mx-auto px-4 py-10">
+      <header class="mb-8">
+        <h1 class="text-3xl font-semibold tracking-tight">Todo App</h1>
+        <p class="text-slate-500 mt-1">
+          Built with TypeScript, Vite, and Tailwind.
+        </p>
+      </header>
+
+      <div
+        id="error-banner"
+        class="hidden mb-4 px-4 py-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm"
+        role="alert"
+      ></div>
+
+      <form id="todo-form" class="flex gap-2 mb-4">
+        <input
+          id="todo-input"
+          type="text"
+          placeholder="What needs to be done?"
+          autocomplete="off"
+          class="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent"
+        />
+        <button
+          type="submit"
+          class="px-4 py-2 rounded-lg bg-slate-900 text-white font-medium hover:bg-slate-800"
+        >
+          Add
+        </button>
+      </form>
+
+      <input
+        id="todo-search"
+        type="search"
+        placeholder="Search todos..."
+        class="w-full mb-6 px-3 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-sky-300"
+      />
+
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wide">
+          Your todos
+        </h2>
+        <span id="todo-counter" class="text-xs text-slate-400"></span>
+      </div>
+
+      <ul id="todo-list" class="flex flex-col gap-2"></ul>
+    </main>
+
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>

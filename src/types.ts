@@ -1,8 +1,10 @@
-// TODO: Definisikan tipe data untuk To-Do item di sini
-// Hint: To-Do sebaiknya memiliki id, text, dan status completed
+export interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: string;
+}
 
-// TODO: Buat interface untuk To-Do item
+export type TodoStatus = 'ACTIVE' | 'DONE';
 
-// TODO: Buat tipe untuk status To-Do (active/done)
-
-// TODO: Buat tipe untuk fungsi-fungsi yang akan digunakan
+export type NewTodoInput = Pick<Todo, 'text'>;

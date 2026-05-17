@@ -1,12 +1,35 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import { StorageError } from './errors';
+import type { Todo } from './types';
+import { isTodoArray } from './utils';
 
-// TODO: Definisikan path file untuk menyimpan data To-Do
+const STORAGE_KEY = 'todos:v1';
 
-// TODO: Buat fungsi untuk membaca To-Do dari file
-// Hint: Gunakan try-catch untuk handle error saat membaca file
+export function loadTodos(): Todo[] {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw === null) return [];
 
-// TODO: Buat fungsi untuk menyimpan To-Do ke file
-// Hint: Jangan lupa konversi ke JSON string sebelum disimpan
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new StorageError('Stored todos are not valid JSON', err);
+  }
 
-// TODO: Buat fungsi untuk inisialisasi storage (buat file kosong jika belum ada)
+  if (!isTodoArray(parsed)) {
+    throw new StorageError('Stored todos do not match the expected shape');
+  }
+
+  return parsed;
+}
+
+export function saveTodos(todos: Todo[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  } catch (err) {
+    throw new StorageError('Failed to save todos to localStorage', err);
+  }
+}
+
+export function clearTodos(): void {
+  localStorage.removeItem(STORAGE_KEY);
+}
